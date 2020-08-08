@@ -10,11 +10,9 @@ def excMacro(fileName, macroName):
     :return: nothing
     """
     # 打开文件
-    excl = Excel(fileName)
+    targetFile = Excel(file_path=fileName)
     # 执行宏
-    excl.run_macro(macroName)
-    # 关闭，退出
-    excel.quit()
+    targetFile.run_macro(macroName)
 
 
 def choseFile(inputList, filterDate):
@@ -50,13 +48,16 @@ def excDirectoryMarco(pathName, filterDate, macroName):
     filteredFileList = choseFile(fileList, filterDate)
     # 对list中每个文件执行excMarco(fileName,marco)
     for file in filteredFileList:
-        excMacro(file, macroName)
+        try:
+            excMacro(file, macroName)
+        except:
+            pass
 
 
 if __name__ == '__main__':
-    path = ''
+    path = 'C:/Users/Administrator/PycharmProjects/taxFreeCustomerExcelFile/result/南山'
     date = datetime.date.today().strftime("%Y-%m-%d")
     macroFile = 'C:/Users/Administrator/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB'
-    excel = Excel(macroFile)
-    excDirectoryMarco(path, date, '宏')
+    excel = Excel(file_path=macroFile)
+    excDirectoryMarco(path, date, 'PERSONAL.XLSB!南山')
     excel.quit()
