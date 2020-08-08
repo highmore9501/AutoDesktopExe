@@ -1,32 +1,62 @@
-from automagica import utilities
+from automagica.activities import get_files_in_folder, Excel
+import datetime
 
 
-def excMarco(fileName, firstKey, secondKey):
+def excMacro(fileName, macroName):
     """
     打开excel文件，然后执行已经绑定组合键的宏,执行前要确认保存宏的文件已经打开
+    :param macroName: 宏名称
     :param fileName: 文件名
-    :param firstKey: 组合键1
-    :param secondKey: 组合键2
     :return: nothing
     """
     # 打开文件
-    # 执行组合键
-    # 保存文件
+    excl = Excel(fileName)
+    # 执行宏
+    excl.run_macro(macroName)
     # 关闭，退出
-    pass
+    excel.quit()
 
 
-def excDirectoryMarco(path, date, firstKey, secondKey):
+def choseFile(inputList, filterDate):
+    """
+    按日期筛选符合要求的文件，输出到列表
+    :param inputList: 输入的文件列表
+    :param filterDate: 日期 "%Y-%m-%d"
+    :return: 符合日期要求的文件列表
+    """
+    import os
+    outputList = []
+    for file in inputList:
+        statInfo = os.stat(file)
+        createTime = statInfo.st_ctime
+        createDayArray = datetime.datetime.fromtimestamp(createTime)
+        createDay = createDayArray.strftime("%Y-%m-%d")
+        if createDay == filterDate:
+            outputList.append(file)
+    return outputList
+
+
+def excDirectoryMarco(pathName, filterDate, macroName):
     """
     对文件夹里所有excel文件执行绑定组合键的宏，执行前要确认保存宏的文件已经打开
-    :param path: 文件夹名
-    :param date: 日期
-    :param firstKey: 组合键1
-    :param secondKey: 组合键2
+    :param macroName: 宏名称
+    :param pathName: 文件夹名
+    :param filterDate: 日期 "%Y-%m-%d"
     :return: nothing
     """
-    # 以path下所有文件名生成一个list
-    # 进行清洗，只保留excel文件
+    # 生成path下所有excel文件的列表
+    fileList = get_files_in_folder(pathName, extension='xlsx')
     # 进行清洗，只保留某日期生成的文件
-    # 对list中每个文件执行excMarco(fileName,firstKey,secondKey)
-    pass
+    filteredFileList = choseFile(fileList, filterDate)
+    # 对list中每个文件执行excMarco(fileName,marco)
+    for file in filteredFileList:
+        excMacro(file, macroName)
+
+
+if __name__ == '__main__':
+    path = ''
+    date = datetime.date.today().strftime("%Y-%m-%d")
+    macroFile = 'C:/Users/Administrator/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB'
+    excel = Excel(macroFile)
+    excDirectoryMarco(path, date, '宏')
+    excel.quit()
