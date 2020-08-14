@@ -62,10 +62,12 @@ def dailyTask(date=None):
     """
     每日给生成的报备excel文件套用宏
     """
-    root = 'C:/Users/Administrator/PycharmProjects/taxFreeCustomerExcelFile/result'
+    import os
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    root = basedir.rsplit('\\', 1)[0] + r'\taxFreeCustomerExcelFile\result'
     if date == None:
         date = datetime.date.today().strftime("%Y-%m-%d")
-    macroFile = 'C:/Users/Administrator/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB'
+    macroFile = basedir + r'\template\PERSONAL.XLSB'
     macroInfoSet = [
         ['中御', '中御'],
         ['分界洲', '分界洲'],
@@ -89,9 +91,4 @@ def dailyTask(date=None):
 
 
 if __name__ == '__main__':
-    path = 'C:/Users/Administrator/PycharmProjects/taxFreeCustomerExcelFile/result/南山'
-    date = datetime.date.today().strftime("%Y-%m-%d")
-    macroFile = 'C:/Users/Administrator/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB'
-    excel = Excel(file_path=macroFile)
-    excDirectoryMarco(path, date, 'PERSONAL.XLSB!南山')
-    excel.quit()
+    dailyTask()
